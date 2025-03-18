@@ -1,0 +1,9 @@
+# Directories that do not need formatting
+node_modules
+.expo
+.vscode
+assets
+
+# Configuration files that should not be modified
+package-lock.json
+expo-env.d.ts

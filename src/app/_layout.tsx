@@ -10,6 +10,8 @@ import {
   OpenSans_700Bold,
 } from '@expo-google-fonts/open-sans';
 
+import { Loading } from '@/components/loading';
+
 export default function Layout() {
   const [fontsLoaded] = useFonts({
     OpenSans_400Regular,
@@ -19,7 +21,7 @@ export default function Layout() {
   });
 
   if (!fontsLoaded) {
-    return;
+    return <Loading />;
   }
 
   return (

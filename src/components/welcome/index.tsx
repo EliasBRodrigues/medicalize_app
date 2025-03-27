@@ -1,16 +1,18 @@
 import { s } from './styles';
 
-import { Image, Text, View } from 'react-native';
+import { Image, Text, View, Dimensions } from 'react-native';
 
 export function Welcome() {
   return (
-    <View>
+    <View style={s.container}>
       <Image source={require('@/assets/logo.png')} style={s.logo} />
 
-      <Text style={s.title}>Bem vindo ao medicalize!</Text>
+      <Text style={s.title}>
+        {Dimensions.get('window').width < 360 ? 'Bem vindo\nao medicalize!' : 'Bem vindo ao medicalize!'}
+      </Text>
 
       <Text style={s.subtite}>
-        Encontre informações sobre medicamentos de forma rápida e fácil
+        Informações sobre medicamentos {"\n"} de forma rápida e fácil
       </Text>
     </View>
   );

@@ -20,7 +20,7 @@ export const s = StyleSheet.create({
   subtite: {
     fontFamily: fontFamily.regular,
     fontSize: 16,
-    color: colors.gray[400],
+    color: colors.gray[500],
     marginTop: 8,
     textAlign: 'center',
   },

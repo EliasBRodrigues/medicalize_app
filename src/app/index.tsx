@@ -2,6 +2,7 @@ import { View, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Welcome } from '@/components/welcome';
 import { Button } from '@/components/button';
+import { router } from 'expo-router';
 
 export default function Index() {
   return (
@@ -40,7 +41,7 @@ export default function Index() {
         }}
       >
         {/* "Start" button */}
-        <Button>
+        <Button onPress={() => { router.navigate("/home")/* Navigate to home */ }}>
           <Button.Title>Começar</Button.Title>
         </Button>
       </LinearGradient>

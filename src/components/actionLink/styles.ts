@@ -3,18 +3,14 @@ import { colors, fontFamily } from '@/styles/theme';
 
 export const s = StyleSheet.create({
   container: {
-    height: 48,
-    maxHeight: 56,
-    backgroundColor: colors.green.base,
-    borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: 4,
   },
-  title: {
-    color: colors.gray[100],
-    fontFamily: fontFamily.semiBold,
-    fontSize: 16,
+  text: {
+    color: colors.gray[600],
+    fontFamily: fontFamily.regular,
+    fontSize: 12,
   },
 });

@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 import { markAsAccessed, checkFirstAccess } from '@/storage/firstAccessStorage';
 import { useEffect, useState } from 'react';
 import { colors } from '@/styles/colors';
+import { useCameraPermission } from 'react-native-vision-camera';
 
 export default function Index() {
   // Initialize router for navigation
@@ -15,31 +16,54 @@ export default function Index() {
   // State to manage button text
   const [textButton, setTextButton] = useState<string | null>(null);
 
+  // Request camera permissions
+  const { requestPermission } = useCameraPermission();
+
   // Effect to handle first access check
   useEffect(() => {
     async function checkAccess() {
       try {
         // Check if this is the user's first access
         const isFirstAccess = await checkFirstAccess();
-    
+
         if (isFirstAccess) {
           // Set button text for first access
           setTextButton('Começar');
           // Mark app as accessed in storage
-          await markAsAccessed(); 
+          await markAsAccessed();
         } else {
           // Set button text for returning users
           setTextButton('Entrar');
         }
       } catch (error) {
         console.error('Erro ao lidar com o primeiro acesso:', error);
-        Alert.alert('Erro', 'Não foi possível carregar as configurações. Tente novamente.');
+        Alert.alert(
+          'Erro',
+          'Não foi possível carregar as configurações. Tente novamente.'
+        );
         // Set button text for retry
-        setTextButton('Tentar novamente'); 
+        setTextButton('Tentar novamente');
       }
     }
     checkAccess(); // Run access check
   }, []); // Empty dependency array ensures this runs only once
+
+  async function handleButtonPress() {
+    try {
+      const granted = await requestPermission(); // Request camera permissions
+      if (!granted) {
+        return Alert.alert(
+          'Câmera',
+          'Precisamos da sua permissão para acessar a câmera.'
+        ); // Alert if permission is denied
+      }
+
+      router.replace('/home'); // Navigate to home screen
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Câmera', 'Não foi possível acessar a câmera.'); // Alert if there's an error
+    }
+  }
 
   return (
     <View
@@ -81,7 +105,7 @@ export default function Index() {
         }}
       >
         {/* Button to navigate to home screen */}
-        <Button onPress={() => router.replace('/home')}>
+        <Button onPress={handleButtonPress}>
           {textButton === null ? (
             // Show loading indicator while text is not set
             <ActivityIndicator size="small" color={colors.white} />

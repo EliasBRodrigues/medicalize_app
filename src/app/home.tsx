@@ -1,81 +1,160 @@
-import React, { useState } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
-import { Button } from "@/components/button";
-import { TopBar } from "@/components/topBar";
-import { IconLineScan } from "@tabler/icons-react-native";
-import { History } from "@/components/history";
-import { SearchPanel } from "@/components/searchPanel";
-import { colors } from "@/styles/colors";
+import React, { useRef } from 'react';
+import { View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import { colors } from '@/styles/colors';
+import { Camera, useCameraDevice } from 'react-native-vision-camera';
+import { CameraButton } from '@/components/cameraButton';
+import {
+  IconBolt,
+  IconHelp,
+  IconPhoto,
+  IconSettings,
+} from '@tabler/icons-react-native';
+import { Search } from 'lucide-react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
-  // State to manage the search input text
-  const [searchText, setSearchText] = useState("");
-
-  // Sample data for the History component (list of medications)
-  const DATA = [
-    { id: "1", title: "Dipirona" },
-    { id: "2", title: "Dicloridrato de Metadona" },
-    { id: "3", title: "Paracetamol" },
-    { id: "4", title: "Ibuprofeno" },
-    { id: "5", title: "Losartana" },
-    { id: "6", title: "Mylantra Plus" },
-    { id: "7", title: "Losartana" }
-  ];
+  const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
+  const device = useCameraDevice('back'); // Get the back camera device using the useCameraDevice hook
 
   return (
-    <View style={s.container}>
-      {/* TopBar component with logo name and gear icon */}
-      <TopBar>
-        <TopBar.LogoName />
-      </TopBar>
-
-      {/* Scrollable content area */}
-      <ScrollView 
-        style={s.scrollView} 
-        showsVerticalScrollIndicator={false} // Hides the vertical scroll indicator
-      >
-        {/* Search panel for medication lookup */}
-        <SearchPanel
-          placeholder="Pesquisar medicamento" 
-          value={searchText} 
-          onChangeText={(searchText) => setSearchText(searchText)} 
+    <>
+      {/* Hide the StatusBar to maximize the camera screen space */}
+      <StatusBar hidden={true} />
+      {/* Render the camera only if the back device is available */}
+      {device && (
+        <Camera
+          photo={true} // Enable photo capture
+          style={StyleSheet.absoluteFill} // Fill the entire screen with absolute positioning
+          ref={cameraRef} // Assign the reference for camera control
+          device={device} // Use the back camera device
+          isActive={true} // Keep the camera active
+          torch={'on'} // Enable torch (flash) by default
+          resizeMode="cover" // Adjust camera image to cover the screen
         />
+      )}
 
-        
-        {/* History component displaying the list of drugs that have already been searched */}
-        <History data={DATA} />
-      </ScrollView>
+      {/* Safe area for the top bar, respecting device notches and edges */}
+      <SafeAreaView style={s.topBarSafeArea} edges={['top', 'left', 'right']}>
+        <View style={s.topBar}>
+          {/* Flash toggle button */}
+          <CameraButton>
+            <CameraButton.Icon icon={IconBolt} color={colors.white} size={24} />
+          </CameraButton>
 
-      {/* Container for the fixed button at the bottom */}
-      <View style={s.btnContainer}>    
-        {/* Button to identify a medicine, through scanning */}
-        <Button>
-          <Button.Icon icon={IconLineScan} />
-          <Button.Title>Identificar Medicamento</Button.Title>
-        </Button>
-      </View>
-    </View>
+          {/* Container for help and settings buttons */}
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            {/* Help button */}
+            <CameraButton>
+              <CameraButton.Icon
+                icon={IconHelp}
+                color={colors.white}
+                size={24}
+              />
+            </CameraButton>
+
+            {/* Settings button */}
+            <CameraButton>
+              <CameraButton.Icon
+                icon={IconSettings}
+                color={colors.white}
+                size={24}
+              />
+            </CameraButton>
+          </View>
+        </View>
+      </SafeAreaView>
+
+      {/* Safe area for the bottom bar, respecting device bottom edges */}
+      <SafeAreaView
+        style={s.bottomBarSafeArea}
+        edges={['bottom', 'left', 'right']}
+      >
+        {/* Bottom bar with camera controls */}
+        <View style={s.bottomBar}>
+          {/* Photo library button */}
+          <CameraButton>
+            <CameraButton.Icon
+              icon={IconPhoto}
+              color={colors.white}
+              size={28}
+            />
+          </CameraButton>
+
+          {/* Photo capture button */}
+          <TouchableOpacity
+            style={s.photoCaptureButton}
+            onPress={() => {
+              console.log('Take a picture');
+            }}
+          >
+            <View
+              style={{
+                width: 60,
+                height: 60,
+                borderRadius: 100,
+                backgroundColor: colors.white,
+              }}
+            />
+          </TouchableOpacity>
+
+          {/* Search button */}
+          <CameraButton
+            style={s.searchButton}
+            onPress={() => {
+              console.log('Open Modal');
+            }}
+          >
+            <CameraButton.Icon icon={Search} color={colors.white} size={24} />
+          </CameraButton>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
 
 const s = StyleSheet.create({
-  container: {
-    flex: 1,
+  topBarSafeArea: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
-  scrollView: {
-    flex: 1, 
-    position: "absolute", 
-    bottom: 80, 
-    top: 64, 
-    overflow: "hidden", 
-    paddingHorizontal: 16
+  topBar: {
+    paddingHorizontal: 24,
+    paddingVertical: 0,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
-  btnContainer: {
-    position: "absolute",
+  bottomBarSafeArea: {
+    position: 'absolute',
     bottom: 0,
-    width: "100%",
+    left: 0,
+    right: 0,
+  },
+  bottomBar: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: colors.gray[100],
-  }
-})
+    height: 125,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  photoCaptureButton: {
+    width: 74,
+    height: 74,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 4,
+    borderColor: colors.white,
+  },
+  searchButton: {
+    width: 44,
+    height: 44,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

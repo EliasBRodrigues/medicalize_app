@@ -34,18 +34,20 @@ function Button({ children, style, isLoading = false, ...rest }: ButtonProps) {
   );
 }
 
-function Title({ children }: TextProps) {
-  return <Text style={s.title}>{children}</Text>;
+function Title({ children, style }: TextProps) {
+  return <Text style={[s.title, style]}>{children}</Text>;
 }
 
 // IconProps defines the type for the Icon component, which takes a React component as a prop
 type IconProps = {
   icon: React.ComponentType<TablerIconProps>; // The icon component should accept TablerIconProps
+  size?: number; // Optional size prop for the icon
+  color?: string; // Optional color prop for the icon
 };
 
 // Icon component that renders the provided icon with a fixed size and color
-function Icon({ icon: Icon }: IconProps) {
-  return <Icon size={24} color={colors.gray[100]} />;
+function Icon({ icon: Icon, size, color }: IconProps) {
+  return <Icon size={size} color={color} />;
 }
 
 // Assigning Title and Icon as properties to the Button component

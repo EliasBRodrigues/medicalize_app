@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 export const s = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -12,11 +12,11 @@ export const s = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: colors.gray[100],
 
-    position: "absolute", 
-    top: 0, 
-    left: 0, 
-    right: 0, 
-    zIndex: 10
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   logoname: {
     fontFamily: fontFamily.bold,

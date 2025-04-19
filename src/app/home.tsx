@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { colors } from '@/styles/colors';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
@@ -15,6 +15,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
   const device = useCameraDevice('back'); // Get the back camera device using the useCameraDevice hook
+  const [flash, setFlash] = useState<'on' | 'off'>('off'); // Defines a state variable 'flash' to control the camera's torch (flash) mode, with 'on' or 'off' as possible values, initialized to 'off'
+
+  // function to toggle the flash between "on" and "off"
+  function toggleFlash() {
+    setFlash((prevFlash) => (prevFlash === 'on' ? 'off' : 'on'));
+  }
 
   return (
     <>
@@ -28,7 +34,7 @@ export default function Home() {
           ref={cameraRef} // Assign the reference for camera control
           device={device} // Use the back camera device
           isActive={true} // Keep the camera active
-          torch={'on'} // Enable torch (flash) by default
+          torch={flash} // Enable torch (flash) by default
           resizeMode="cover" // Adjust camera image to cover the screen
         />
       )}
@@ -37,8 +43,12 @@ export default function Home() {
       <SafeAreaView style={s.topBarSafeArea} edges={['top', 'left', 'right']}>
         <View style={s.topBar}>
           {/* Flash toggle button */}
-          <CameraButton>
-            <CameraButton.Icon icon={IconBolt} color={colors.white} size={24} />
+          <CameraButton  onPress={toggleFlash}>
+            <CameraButton.Icon 
+              icon={IconBolt} 
+              color={flash == 'on' ? colors.green.base : colors.white} 
+              size={24} 
+            />
           </CameraButton>
 
           {/* Container for help and settings buttons */}

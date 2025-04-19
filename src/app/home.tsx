@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { colors } from '@/styles/colors';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
@@ -11,21 +11,29 @@ import {
 } from '@tabler/icons-react-native';
 import { Search } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { HelpModal } from '@/components/modals/helpModal';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
   const device = useCameraDevice('back'); // Get the back camera device using the useCameraDevice hook
   const [flash, setFlash] = useState<'on' | 'off'>('off'); // Defines a state variable 'flash' to control the camera's torch (flash) mode, with 'on' or 'off' as possible values, initialized to 'off'
+  const [isHelpModalVisible, setHelpModalVisible] = useState(false); // Declare a state variable `isHelpModalVisible` to control the visibility of the Help Model
+  const [isStatusBarVisible, setStatusBarVisible] = useState(true); // Define a state variable `isStatusBarVisible` to control the visibility of the device's status bar
 
   // function to toggle the flash between "on" and "off"
   function toggleFlash() {
     setFlash((prevFlash) => (prevFlash === 'on' ? 'off' : 'on'));
   }
 
+  // useEffect hook to handle side effects based on changes to isHelpModalVisible
+  useEffect(() => {
+    setStatusBarVisible(!isHelpModalVisible);
+  }, [isHelpModalVisible]);
+
   return (
     <>
-      {/* Hide the StatusBar to maximize the camera screen space */}
-      <StatusBar hidden={true} />
+      {/* Hides the status bar to maximize space on the camera screen when no modal is open */}
+      <StatusBar hidden={isStatusBarVisible} />
       {/* Render the camera only if the back device is available */}
       {device && (
         <Camera
@@ -43,18 +51,18 @@ export default function Home() {
       <SafeAreaView style={s.topBarSafeArea} edges={['top', 'left', 'right']}>
         <View style={s.topBar}>
           {/* Flash toggle button */}
-          <CameraButton  onPress={toggleFlash}>
-            <CameraButton.Icon 
-              icon={IconBolt} 
-              color={flash == 'on' ? colors.green.base : colors.white} 
-              size={24} 
+          <CameraButton onPress={toggleFlash}>
+            <CameraButton.Icon
+              icon={IconBolt}
+              color={flash == 'on' ? colors.green.base : colors.white}
+              size={24}
             />
           </CameraButton>
 
           {/* Container for help and settings buttons */}
           <View style={{ flexDirection: 'row', gap: 8 }}>
             {/* Help button */}
-            <CameraButton>
+            <CameraButton onPress={() => setHelpModalVisible(true)}>
               <CameraButton.Icon
                 icon={IconHelp}
                 color={colors.white}
@@ -118,6 +126,11 @@ export default function Home() {
           </CameraButton>
         </View>
       </SafeAreaView>
+
+      <HelpModal
+        visible={isHelpModalVisible}
+        onClose={() => setHelpModalVisible(false)}
+      />
     </>
   );
 }

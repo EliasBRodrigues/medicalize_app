@@ -2,7 +2,6 @@ import { Image, Modal, Text, View } from 'react-native';
 import { s } from './styles';
 import { Button } from '@/components/button';
 import { ModalProps } from '@/types/modal.types';
-import { StatusBar } from 'react-native';
 
 export function HelpModal({ visible, onClose }: ModalProps) {
   return (

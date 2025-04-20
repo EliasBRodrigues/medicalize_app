@@ -12,13 +12,16 @@ import {
 import { Search } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HelpModal } from '@/components/modals/helpModal';
+import { SerachModal } from '@/components/modals/searchModal/indesx';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
   const device = useCameraDevice('back'); // Get the back camera device using the useCameraDevice hook
   const [flash, setFlash] = useState<'on' | 'off'>('off'); // Defines a state variable 'flash' to control the camera's torch (flash) mode, with 'on' or 'off' as possible values, initialized to 'off'
   const [isHelpModalVisible, setHelpModalVisible] = useState(false); // Declare a state variable `isHelpModalVisible` to control the visibility of the Help Model
+  const [isSearchModalVisible, setSearchModalVisible] = useState(false); // Declare a state variable `isHelpModalVisible` to control the visibility of the Help Model
   const [isStatusBarVisible, setStatusBarVisible] = useState(true); // Define a state variable `isStatusBarVisible` to control the visibility of the device's status bar
+  const [searchValue, setSearchValue] = useState(''); // State to manage search input value
 
   // function to toggle the flash between "on" and "off"
   function toggleFlash() {
@@ -27,8 +30,37 @@ export default function Home() {
 
   // useEffect hook to handle side effects based on changes to isHelpModalVisible
   useEffect(() => {
-    setStatusBarVisible(!isHelpModalVisible);
-  }, [isHelpModalVisible]);
+    // Status bar visible only when both modals are closed
+    setStatusBarVisible(!isHelpModalVisible && !isSearchModalVisible);
+  
+    // Flash disabled if any modal is open
+    if (isHelpModalVisible || isSearchModalVisible) {
+      setFlash("off");
+    }
+  }, [isHelpModalVisible, isSearchModalVisible]);
+
+  const DATA = [
+    { id: '1', title: 'Item 1' },
+    { id: '2', title: 'Item 2' },
+    { id: '3', title: 'Item 3' },
+    { id: '4', title: 'Item 4' },
+    { id: '5', title: 'Item 5' },
+    { id: '6', title: 'Item 6' },
+    { id: '7', title: 'Item 7' },
+    { id: '8', title: 'Item 8' },
+    { id: '9', title: 'Item 9' },
+    { id: '10', title: 'Item 10' },
+    { id: '11', title: 'Item 11' },
+    { id: '12', title: 'Item 12' },
+    { id: '13', title: 'Item 13' },
+    { id: '14', title: 'Item 14' },
+    { id: '15', title: 'Item 15' },
+    { id: '16', title: 'Item 16' },
+    { id: '17', title: 'Item 17' },
+    { id: '18', title: 'Item 18' },
+    { id: '19', title: 'Item 19' },
+    { id: '20', title: 'Item 20' },
+  ];
 
   return (
     <>
@@ -118,9 +150,7 @@ export default function Home() {
           {/* Search button */}
           <CameraButton
             style={s.searchButton}
-            onPress={() => {
-              console.log('Open Modal');
-            }}
+            onPress={() => setSearchModalVisible(true)}
           >
             <CameraButton.Icon icon={Search} color={colors.white} size={24} />
           </CameraButton>
@@ -130,6 +160,14 @@ export default function Home() {
       <HelpModal
         visible={isHelpModalVisible}
         onClose={() => setHelpModalVisible(false)}
+      />
+
+      <SerachModal
+        visible={isSearchModalVisible}
+        onClose={() => setSearchModalVisible(false)}
+        value={searchValue}
+        onChangeText={(searchValue) => setSearchValue(searchValue)}
+        data={DATA}
       />
     </>
   );

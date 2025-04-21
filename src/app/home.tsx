@@ -26,9 +26,11 @@ export default function Home() {
   const [isPhotoModalVisible, setPhotoModalVisible] = useState(false); // Declare a state variable `isPhotoModalVisible` to control the visibility of the Photo Model
   const [isStatusBarVisible, setStatusBarVisible] = useState(true); // Define a state variable `isStatusBarVisible` to control the visibility of the device's status bar
   const [searchValue, setSearchValue] = useState(''); // State to manage search input value
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // State to hold the URI of the selected image or null if no image is selected
+  const [photoUri, setPhotoUri] = useState<string | null>(null); // State to hold the URI of the selected image or null if no image is selected
+  const [isCameraActive, setIsCameraActive] = useState(true); // State to track whether the camera is active
 
-  async function pickImage() {
+  // Function to select an image from the device gallery
+  const pickImage = async () => {
     try {
       // Launch the image picker library to select an image from the device's gallery
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -41,13 +43,35 @@ export default function Home() {
       // Check if the user did not cancel the picker and if an image was successfully selected
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const imageUri = result.assets[0].uri; // Get the URI of the selected image
-        setSelectedImage(imageUri); // Store the image URI in state for preview
+        setPhotoUri(imageUri); // Store the image URI in state for preview
         setPhotoModalVisible(true); // Open the modal to display the selected image
       }
     } catch (error) {
       console.error('Erro ao carregar imagem:', error);
     }
-  }
+  };
+
+  // Function to capture a photo using the camera
+  const takePhoto = async () => {
+    // Check if camera reference exists
+    if (cameraRef.current) {
+      try {
+        // Capture photo with specified options
+        const photo = await cameraRef.current.takePhoto({
+          flash: 'off', // Flash setting: 'on', 'off', or 'auto'
+        });
+        // Construct file URI from photo path as per documentation
+        const uri = `file://${photo.path}`;
+        // Store the image URI in state for preview
+        setPhotoUri(uri);
+        // Open modal to display the selected image
+        setPhotoModalVisible(true);
+      } catch (error) {
+        // Log any errors that occur during photo capture
+        console.error('Error taking photo:', error);
+      }
+    }
+  };
 
   // function to toggle the flash between "on" and "off"
   function toggleFlash() {
@@ -61,9 +85,12 @@ export default function Home() {
       !isHelpModalVisible && !isSearchModalVisible && !isPhotoModalVisible
     );
 
-    // Flash disabled if any modal is open
+    // Flash and Camera disabled if any modal is open
     if (isHelpModalVisible || isSearchModalVisible || isPhotoModalVisible) {
       setFlash('off');
+      setIsCameraActive(false);
+    } else {
+      setIsCameraActive(true);
     }
   }, [isHelpModalVisible, isSearchModalVisible, isPhotoModalVisible]);
 
@@ -101,7 +128,7 @@ export default function Home() {
           style={StyleSheet.absoluteFill} // Fill the entire screen with absolute positioning
           ref={cameraRef} // Assign the reference for camera control
           device={device} // Use the back camera device
-          isActive={true} // Keep the camera active
+          isActive={isCameraActive} // Keep the camera active
           torch={flash} // Enable torch (flash) by default
           resizeMode="cover" // Adjust camera image to cover the screen
         />
@@ -159,12 +186,7 @@ export default function Home() {
           </CameraButton>
 
           {/* Photo capture button */}
-          <TouchableOpacity
-            style={s.photoCaptureButton}
-            onPress={() => {
-              console.log('Take a picture');
-            }}
-          >
+          <TouchableOpacity style={s.photoCaptureButton} onPress={takePhoto}>
             <View
               style={{
                 width: 60,
@@ -201,7 +223,7 @@ export default function Home() {
       <PhotoModal
         visible={isPhotoModalVisible}
         onClose={() => setPhotoModalVisible(false)}
-        photoUri={selectedImage!}
+        photoUri={photoUri!}
       />
     </>
   );

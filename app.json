@@ -16,7 +16,9 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera."
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
+        "NSPhotoLibraryUsageDescription": "$(PRODUCT_NAME) needs access to your Photo Library to select images.",
+        "NSMicrophoneUsageDescription": "$(PRODUCT_NAME) needs access to your Microphone for video recording."
       }
     },
     "android": {
@@ -24,7 +26,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#257F49"
       },
-      "permissions": ["android.permission.CAMERA"],
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
       "package": "com.ryanbrazz.medicalize"
     },
     "web": {
@@ -39,6 +45,14 @@
         "react-native-vision-camera",
         {
           "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos so you can share them.",
+          "cameraPermission": "The app needs access to your camera to take photos.",
+          "microphonePermission": "The app needs access to your microphone for video recording."
         }
       ]
     ],

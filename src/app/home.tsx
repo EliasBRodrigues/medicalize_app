@@ -13,15 +13,41 @@ import { Search } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HelpModal } from '@/components/modals/helpModal';
 import { SerachModal } from '@/components/modals/searchModal/indesx';
+import { PhotoModal } from '@/components/modals/photoModal/inde';
+
+import * as ImagePicker from 'expo-image-picker';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
   const device = useCameraDevice('back'); // Get the back camera device using the useCameraDevice hook
   const [flash, setFlash] = useState<'on' | 'off'>('off'); // Defines a state variable 'flash' to control the camera's torch (flash) mode, with 'on' or 'off' as possible values, initialized to 'off'
   const [isHelpModalVisible, setHelpModalVisible] = useState(false); // Declare a state variable `isHelpModalVisible` to control the visibility of the Help Model
-  const [isSearchModalVisible, setSearchModalVisible] = useState(false); // Declare a state variable `isHelpModalVisible` to control the visibility of the Help Model
+  const [isSearchModalVisible, setSearchModalVisible] = useState(false); // Declare a state variable `isSerchModalVisible` to control the visibility of the Search Model
+  const [isPhotoModalVisible, setPhotoModalVisible] = useState(false); // Declare a state variable `isPhotoModalVisible` to control the visibility of the Photo Model
   const [isStatusBarVisible, setStatusBarVisible] = useState(true); // Define a state variable `isStatusBarVisible` to control the visibility of the device's status bar
   const [searchValue, setSearchValue] = useState(''); // State to manage search input value
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // State to hold the URI of the selected image or null if no image is selected
+
+  async function pickImage() {
+    try {
+      // Launch the image picker library to select an image from the device's gallery
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'], // Restrict selection to images only
+        allowsEditing: false, // Disable editing features in the image picker
+        aspect: [4, 3], // Set the aspect ratio for the selected image
+        quality: 1, // Set the quality of the image to maximum (1)
+      });
+
+      // Check if the user did not cancel the picker and if an image was successfully selected
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri; // Get the URI of the selected image
+        setSelectedImage(imageUri); // Store the image URI in state for preview
+        setPhotoModalVisible(true); // Open the modal to display the selected image
+      }
+    } catch (error) {
+      console.error('Erro ao carregar imagem:', error);
+    }
+  }
 
   // function to toggle the flash between "on" and "off"
   function toggleFlash() {
@@ -31,13 +57,15 @@ export default function Home() {
   // useEffect hook to handle side effects based on changes to isHelpModalVisible
   useEffect(() => {
     // Status bar visible only when both modals are closed
-    setStatusBarVisible(!isHelpModalVisible && !isSearchModalVisible);
-  
+    setStatusBarVisible(
+      !isHelpModalVisible && !isSearchModalVisible && !isPhotoModalVisible
+    );
+
     // Flash disabled if any modal is open
-    if (isHelpModalVisible || isSearchModalVisible) {
-      setFlash("off");
+    if (isHelpModalVisible || isSearchModalVisible || isPhotoModalVisible) {
+      setFlash('off');
     }
-  }, [isHelpModalVisible, isSearchModalVisible]);
+  }, [isHelpModalVisible, isSearchModalVisible, isPhotoModalVisible]);
 
   const DATA = [
     { id: '1', title: 'Item 1' },
@@ -122,7 +150,7 @@ export default function Home() {
         {/* Bottom bar with camera controls */}
         <View style={s.bottomBar}>
           {/* Photo library button */}
-          <CameraButton>
+          <CameraButton onPress={pickImage}>
             <CameraButton.Icon
               icon={IconPhoto}
               color={colors.white}
@@ -168,6 +196,12 @@ export default function Home() {
         value={searchValue}
         onChangeText={(searchValue) => setSearchValue(searchValue)}
         data={DATA}
+      />
+
+      <PhotoModal
+        visible={isPhotoModalVisible}
+        onClose={() => setPhotoModalVisible(false)}
+        photoUri={selectedImage!}
       />
     </>
   );

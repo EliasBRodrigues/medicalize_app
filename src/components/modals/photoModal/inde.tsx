@@ -5,6 +5,7 @@ import { IconX } from '@tabler/icons-react-native';
 import { colors } from '@/styles/theme';
 import { CameraButton } from '@/components/cameraButton';
 import { s } from './styles';
+import { router } from 'expo-router';
 
 type Props = ModalProps & {
   photoUri: string;
@@ -24,7 +25,11 @@ export function PhotoModal({ visible, onClose, photoUri }: Props) {
           resizeMode="contain"
         />
 
-        <Button style={{ marginTop: 'auto' }}>
+        <Button style={{ marginTop: 'auto' }} 
+            onPress={() => router.navigate({
+              pathname: '/medicine/[id]',
+              params: { id: '21321432rcewe2' },
+          })}>
           <Button.Title>Continuar</Button.Title>
         </Button>
       </View>

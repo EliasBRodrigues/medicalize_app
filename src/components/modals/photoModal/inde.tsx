@@ -1,41 +1,30 @@
-import { Image, Modal, View, StyleSheet } from 'react-native';
-import { Button } from '@/components/button';
+import { Image, Modal, View, ActivityIndicator } from 'react-native';
 import { ModalProps } from '@/types/modal.types';
-import { IconX } from '@tabler/icons-react-native';
 import { colors } from '@/styles/theme';
-import { CameraButton } from '@/components/cameraButton';
 import { s } from './styles';
-import { router } from 'expo-router';
 
+// Define the Props type, extending ModalProps and adding photoUri
 type Props = ModalProps & {
-  photoUri: string;
+  photoUri: string; // URI of the photo to be displayed
 };
+
 
 export function PhotoModal({ visible, onClose, photoUri }: Props) {
   return (
     <Modal style={s.modal} animationType="fade" visible={visible} transparent>
+      {/* Container View for the image */}
       <View style={s.container}>
-        <CameraButton onPress={onClose} style={{ marginLeft: 'auto' }}>
-          <CameraButton.Icon icon={IconX} color={colors.gray[100]} />
-        </CameraButton>
-
+        {/* Image component displaying the photo from photoUri */}
         <Image
-          source={{ uri: photoUri }}
-          style={s.image}
-          resizeMode="contain"
+          source={{ uri: photoUri }} // Source of the image
+          style={s.image} // Styling for the image
+          resizeMode="cover" // Image scaling mode to cover the container
         />
-
-        <Button
-          style={{ marginTop: 'auto' }}
-          onPress={() =>
-            router.navigate({
-              pathname: '/medicine/[id]',
-              params: { id: '21321432rcewe2' },
-            })
-          }
-        >
-          <Button.Title>Continuar</Button.Title>
-        </Button>
+      </View>
+      {/* Overlay View displaying a loading indicator */}
+      <View style={s.overlay}>
+        {/* ActivityIndicator for loading state, with large size and green color */}
+        <ActivityIndicator size={'large'} color={colors.green.base} />
       </View>
     </Modal>
   );

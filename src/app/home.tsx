@@ -234,7 +234,6 @@ export default function Home() {
 
       <PhotoModal
         visible={isPhotoModalVisible}
-        onClose={() => setPhotoModalVisible(false)}
         photoUri={photoUri!}
       />
     </>

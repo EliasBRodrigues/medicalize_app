@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { colors } from '@/styles/colors';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
@@ -16,6 +16,7 @@ import { SerachModal } from '@/components/modals/searchModal/indesx';
 import { PhotoModal } from '@/components/modals/photoModal/inde';
 
 import * as ImagePicker from 'expo-image-picker';
+import { useFocusEffect } from 'expo-router';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
@@ -78,14 +79,12 @@ export default function Home() {
     setFlash((prevFlash) => (prevFlash === 'on' ? 'off' : 'on'));
   }
 
-  // useEffect hook to handle side effects based on changes to isHelpModalVisible
+  // useEffect para gerenciar efeitos colaterais com base na visibilidade dos modais
   useEffect(() => {
-    // Status bar visible only when both modals are closed
     setStatusBarVisible(
       !isHelpModalVisible && !isSearchModalVisible && !isPhotoModalVisible
     );
 
-    // Flash and Camera disabled if any modal is open
     if (isHelpModalVisible || isSearchModalVisible || isPhotoModalVisible) {
       setFlash('off');
       setIsCameraActive(false);
@@ -93,6 +92,19 @@ export default function Home() {
       setIsCameraActive(true);
     }
   }, [isHelpModalVisible, isSearchModalVisible, isPhotoModalVisible]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsCameraActive(true);
+      setPhotoUri(null);
+      setHelpModalVisible(false);
+      setSearchModalVisible(false);
+      setPhotoModalVisible(false);
+      return () => {
+        setIsCameraActive(false);
+      };
+    }, [])
+  );
 
   const DATA = [
     { id: '1', title: 'Item 1' },

@@ -25,11 +25,15 @@ export function PhotoModal({ visible, onClose, photoUri }: Props) {
           resizeMode="contain"
         />
 
-        <Button style={{ marginTop: 'auto' }} 
-            onPress={() => router.navigate({
+        <Button
+          style={{ marginTop: 'auto' }}
+          onPress={() =>
+            router.navigate({
               pathname: '/medicine/[id]',
               params: { id: '21321432rcewe2' },
-          })}>
+            })
+          }
+        >
           <Button.Title>Continuar</Button.Title>
         </Button>
       </View>

@@ -35,8 +35,12 @@ function LogoName() {
 }
 
 // ChevronIcon component displays a left arrow icon
-function ChevronIcon() {
-  return <IconArrowNarrowLeft size={28} color={colors.gray[500]} />;
+function ChevronIcon({ ...rest }: TouchableOpacityProps) {
+  return (
+    <TouchableOpacity {...rest}>
+      <IconArrowNarrowLeft size={24} color={colors.gray[600]} />
+    </TouchableOpacity>
+  );
 }
 
 // Attaching Logo and ChevronIcon as static properties to TopBar

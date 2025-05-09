@@ -16,6 +16,7 @@ import { SearchModal } from '@/components/modals/searchModal/index';
 import { PhotoModal } from '@/components/modals/photoModal/index';
 
 import * as ImagePicker from 'expo-image-picker';
+import { processImage } from '@/utils/imageProcessing';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
@@ -177,7 +178,7 @@ export default function Home() {
         {/* Bottom bar with camera controls */}
         <View style={s.bottomBar}>
           {/* Photo library button */}
-          <CameraButton onPress={pickImage}>
+          <CameraButton onPress={() => processImage('pick', setPhotoUri, setPhotoModalVisible)}>
             <CameraButton.Icon
               icon={IconPhoto}
               color={colors.white}
@@ -186,7 +187,7 @@ export default function Home() {
           </CameraButton>
 
           {/* Photo capture button */}
-          <TouchableOpacity style={s.photoCaptureButton} onPress={takePhoto}>
+          <TouchableOpacity style={s.photoCaptureButton} onPress={() => processImage('take', setPhotoUri, setPhotoModalVisible, cameraRef)}>
             <View
               style={{
                 width: 60,

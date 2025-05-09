@@ -27,7 +27,7 @@ type Props = ModalProps &
     data: Item[];
   };
 
-export function SerachModal({
+export function SearchModal({
   visible,
   onClose,
   value,

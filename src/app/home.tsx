@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { colors } from '@/styles/colors';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
@@ -12,11 +12,10 @@ import {
 import { Search } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HelpModal } from '@/components/modals/helpModal';
-import { SerachModal } from '@/components/modals/searchModal/indesx';
-import { PhotoModal } from '@/components/modals/photoModal/inde';
+import { SearchModal } from '@/components/modals/searchModal/index';
+import { PhotoModal } from '@/components/modals/photoModal/index';
 
 import * as ImagePicker from 'expo-image-picker';
-import { useFocusEffect } from 'expo-router';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
@@ -79,12 +78,14 @@ export default function Home() {
     setFlash((prevFlash) => (prevFlash === 'on' ? 'off' : 'on'));
   }
 
-  // useEffect para gerenciar efeitos colaterais com base na visibilidade dos modais
+  // useEffect hook to handle side effects based on changes to isHelpModalVisible
   useEffect(() => {
+    // Status bar visible only when both modals are closed
     setStatusBarVisible(
       !isHelpModalVisible && !isSearchModalVisible && !isPhotoModalVisible
     );
 
+    // Flash and Camera disabled if any modal is open
     if (isHelpModalVisible || isSearchModalVisible || isPhotoModalVisible) {
       setFlash('off');
       setIsCameraActive(false);
@@ -92,19 +93,6 @@ export default function Home() {
       setIsCameraActive(true);
     }
   }, [isHelpModalVisible, isSearchModalVisible, isPhotoModalVisible]);
-
-  useFocusEffect(
-    useCallback(() => {
-      setIsCameraActive(true);
-      setPhotoUri(null);
-      setHelpModalVisible(false);
-      setSearchModalVisible(false);
-      setPhotoModalVisible(false);
-      return () => {
-        setIsCameraActive(false);
-      };
-    }, [])
-  );
 
   const DATA = [
     { id: '1', title: 'Item 1' },
@@ -224,7 +212,7 @@ export default function Home() {
         onClose={() => setHelpModalVisible(false)}
       />
 
-      <SerachModal
+      <SearchModal
         visible={isSearchModalVisible}
         onClose={() => setSearchModalVisible(false)}
         value={searchValue}
@@ -234,6 +222,7 @@ export default function Home() {
 
       <PhotoModal
         visible={isPhotoModalVisible}
+        onClose={() => setPhotoModalVisible(false)}
         photoUri={photoUri!}
       />
     </>

@@ -17,6 +17,7 @@ import { PhotoModal } from '@/components/modals/photoModal/index';
 
 import * as ImagePicker from 'expo-image-picker';
 import { processImage } from '@/utils/imageProcessing';
+import ErrorModal from '@/components/modals/errorModal';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
@@ -26,6 +27,7 @@ export default function Home() {
   const [isSearchModalVisible, setSearchModalVisible] = useState(false); // Declare a state variable `isSerchModalVisible` to control the visibility of the Search Model
   const [isPhotoModalVisible, setPhotoModalVisible] = useState(false); // Declare a state variable `isPhotoModalVisible` to control the visibility of the Photo Model
   const [isStatusBarVisible, setStatusBarVisible] = useState(true); // Define a state variable `isStatusBarVisible` to control the visibility of the device's status bar
+  const [isErrorModalVisible, setErrorModalVisible] = useState(false); // State to manage the visibility of the error modal
   const [searchValue, setSearchValue] = useState(''); // State to manage search input value
   const [photoUri, setPhotoUri] = useState<string | null>(null); // State to hold the URI of the selected image or null if no image is selected
   const [isCameraActive, setIsCameraActive] = useState(true); // State to track whether the camera is active
@@ -178,7 +180,11 @@ export default function Home() {
         {/* Bottom bar with camera controls */}
         <View style={s.bottomBar}>
           {/* Photo library button */}
-          <CameraButton onPress={() => processImage('pick', setPhotoUri, setPhotoModalVisible)}>
+          <CameraButton 
+            onPress={() => 
+              processImage('pick', setPhotoUri, setPhotoModalVisible, setErrorModalVisible)
+            }
+          >
             <CameraButton.Icon
               icon={IconPhoto}
               color={colors.white}
@@ -187,7 +193,11 @@ export default function Home() {
           </CameraButton>
 
           {/* Photo capture button */}
-          <TouchableOpacity style={s.photoCaptureButton} onPress={() => processImage('take', setPhotoUri, setPhotoModalVisible, cameraRef)}>
+          <TouchableOpacity style={s.photoCaptureButton} 
+            onPress={() =>
+              processImage('take', setPhotoUri, setPhotoModalVisible, setErrorModalVisible, cameraRef)
+            }
+          >
             <View
               style={{
                 width: 60,
@@ -226,6 +236,11 @@ export default function Home() {
         onClose={() => setPhotoModalVisible(false)}
         photoUri={photoUri!}
       />
+
+      <ErrorModal
+        visible={isErrorModalVisible}
+        onClose={() => setErrorModalVisible(false)}
+        />
     </>
   );
 }

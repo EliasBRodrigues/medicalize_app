@@ -10,6 +10,7 @@ export async function processImage(
   action: 'pick' | 'take', // Specifies whether to pick an image or take a photo
   setPhotoUri: (uri: string | null) => void, // State setter for the image URI
   setPhotoModalVisible: (visible: boolean) => void, // State setter for the photo modal visibility
+  setErrorModalVisible: (visible: boolean) => void, // State setter for the error modal visibility
   cameraRef?: RefObject<Camera> // Reference to the camera component (optional, used for taking photos)
 ) {
   try {
@@ -65,15 +66,21 @@ export async function processImage(
 
       console.log('Matched Medication:', matchedMedication);
 
-      // Navigate to the medicine details page with the extracted medication name
-      router.navigate({
-        pathname: '/medicine/[id]',
-        params: { id: matchedMedication },
-      });
+      // Check if the matched medication is not found
+      if (matchedMedication === 'medicamento não encontrado') {
+        setErrorModalVisible(true); // Mostre o modal de erro
+      } else {
+        // Navigate to the medicine details page with the extracted medication name
+        router.navigate({
+          pathname: '/medicine/[id]',
+          params: { id: '21321432rcewe2' },
+        });
+      }
     }
   } catch (error) {
     // Log an error message indicating whether the action was picking or taking an image
     console.error(`Erro ao ${action === 'pick' ? 'carregar' : 'tirar'} imagem:`, error);
     setPhotoModalVisible(false); // Hide the loading modal in case of error
+    setErrorModalVisible(true); // Show the error modal in case of error
   }
 }

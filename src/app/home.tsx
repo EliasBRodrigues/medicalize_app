@@ -15,9 +15,8 @@ import { HelpModal } from '@/components/modals/helpModal';
 import { SearchModal } from '@/components/modals/searchModal/index';
 import { PhotoModal } from '@/components/modals/photoModal/index';
 
-import * as ImagePicker from 'expo-image-picker';
 import { processImage } from '@/utils/imageProcessing';
-import ErrorModal from '@/components/modals/errorModal';
+import { ErrorModal } from '@/components/modals/errorModal';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
@@ -31,50 +30,6 @@ export default function Home() {
   const [searchValue, setSearchValue] = useState(''); // State to manage search input value
   const [photoUri, setPhotoUri] = useState<string | null>(null); // State to hold the URI of the selected image or null if no image is selected
   const [isCameraActive, setIsCameraActive] = useState(true); // State to track whether the camera is active
-
-  // Function to select an image from the device gallery
-  const pickImage = async () => {
-    try {
-      // Launch the image picker library to select an image from the device's gallery
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'], // Restrict selection to images only
-        allowsEditing: false, // Disable editing features in the image picker
-        aspect: [4, 3], // Set the aspect ratio for the selected image
-        quality: 1, // Set the quality of the image to maximum (1)
-      });
-
-      // Check if the user did not cancel the picker and if an image was successfully selected
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        const imageUri = result.assets[0].uri; // Get the URI of the selected image
-        setPhotoUri(imageUri); // Store the image URI in state for preview
-        setPhotoModalVisible(true); // Open the modal to display the selected image
-      }
-    } catch (error) {
-      console.error('Erro ao carregar imagem:', error);
-    }
-  };
-
-  // Function to capture a photo using the camera
-  const takePhoto = async () => {
-    // Check if camera reference exists
-    if (cameraRef.current) {
-      try {
-        // Capture photo with specified options
-        const photo = await cameraRef.current.takePhoto({
-          flash: 'off', // Flash setting: 'on', 'off', or 'auto'
-        });
-        // Construct file URI from photo path as per documentation
-        const uri = `file://${photo.path}`;
-        // Store the image URI in state for preview
-        setPhotoUri(uri);
-        // Open modal to display the selected image
-        setPhotoModalVisible(true);
-      } catch (error) {
-        // Log any errors that occur during photo capture
-        console.error('Error taking photo:', error);
-      }
-    }
-  };
 
   // function to toggle the flash between "on" and "off"
   function toggleFlash() {
@@ -98,26 +53,11 @@ export default function Home() {
   }, [isHelpModalVisible, isSearchModalVisible, isPhotoModalVisible]);
 
   const DATA = [
-    { id: '1', title: 'Item 1' },
-    { id: '2', title: 'Item 2' },
-    { id: '3', title: 'Item 3' },
-    { id: '4', title: 'Item 4' },
-    { id: '5', title: 'Item 5' },
-    { id: '6', title: 'Item 6' },
-    { id: '7', title: 'Item 7' },
-    { id: '8', title: 'Item 8' },
-    { id: '9', title: 'Item 9' },
-    { id: '10', title: 'Item 10' },
-    { id: '11', title: 'Item 11' },
-    { id: '12', title: 'Item 12' },
-    { id: '13', title: 'Item 13' },
-    { id: '14', title: 'Item 14' },
-    { id: '15', title: 'Item 15' },
-    { id: '16', title: 'Item 16' },
-    { id: '17', title: 'Item 17' },
-    { id: '18', title: 'Item 18' },
-    { id: '19', title: 'Item 19' },
-    { id: '20', title: 'Item 20' },
+    { id: '1', title: 'Dipirona' },
+    { id: '2', title: 'Ibuprofeno' },
+    { id: '3', title: 'Dicloridrato de Levocitirizina' },
+    { id: '4', title: 'Dipiorna Monoidratada' },
+    { id: '5', title: 'Cimegripe' },
   ];
 
   return (

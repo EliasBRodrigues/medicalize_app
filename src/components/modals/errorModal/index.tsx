@@ -2,7 +2,7 @@ import { ModalProps } from "@/types/modal.types";
 import { Modal, View, Text, TouchableOpacity } from "react-native";
 import { s } from "./styles";
 
-export default function ErrorModal({visible, onClose}: ModalProps) {
+export function ErrorModal({visible, onClose}: ModalProps) {
   return (
     <Modal
         transparent={true} // Makes the modal background transparent
@@ -15,7 +15,7 @@ export default function ErrorModal({visible, onClose}: ModalProps) {
                 <Text style={s.message}>tente novamente em alguns instantes</Text>
                 <View style={s.buttonContainer}>
                     <TouchableOpacity onPress={onClose} style={s.button}>
-                        <Text style={s.buttonText}>Ok</Text>// Button to close the modal
+                        <Text style={s.buttonText}>Ok</Text> 
                     </TouchableOpacity>
                 </View>
             </View>

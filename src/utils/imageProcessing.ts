@@ -67,13 +67,13 @@ export async function processImage(
       console.log('Matched Medication:', matchedMedication);
 
       // Check if the matched medication is not found
-      if (matchedMedication === 'medicamento não encontrado') {
+      if (matchedMedication === 'Nenhum medicamento identificado') {
         setErrorModalVisible(true); // Mostre o modal de erro
       } else {
         // Navigate to the medicine details page with the extracted medication name
         router.navigate({
-          pathname: '/medicine/[id]',
-          params: { id: '21321432rcewe2' },
+          pathname: '/medicine/[name]',
+          params: { name: matchedMedication },
         });
       }
     }

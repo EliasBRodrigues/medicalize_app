@@ -180,6 +180,8 @@ export default function Home() {
       <ErrorModal
         visible={isErrorModalVisible}
         onClose={() => setErrorModalVisible(false)}
+        title="Erro ao processar imagem"
+        message="Ocorreu um erro ao processar a imagem. Tente novamente."
         />
     </>
   );

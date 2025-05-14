@@ -155,6 +155,8 @@ export default function Medicine() {
               router.back(); // Já está correto, mas verifique o contexto
               setErrorModalVisible(false);
             }}
+            title="Medicamento não encontrado"
+            message="Ainda não consta em nossa base de dados" 
           />
         )}
     </SafeAreaView>

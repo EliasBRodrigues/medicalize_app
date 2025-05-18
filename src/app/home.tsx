@@ -18,6 +18,7 @@ import { PhotoModal } from '@/components/modals/photoModal/index';
 import { processImage } from '@/utils/imageProcessing';
 import { ErrorModal } from '@/components/modals/errorModal';
 import { useFocusEffect } from 'expo-router';
+import { navigateToMedicine } from '@/utils/navigationUtils';
 
 export default function Home() {
   const cameraRef = useRef<Camera>(null); // Create a reference to the Camera component for controlling camera actions
@@ -182,6 +183,11 @@ export default function Home() {
         value={searchValue}
         onChangeText={(searchValue) => setSearchValue(searchValue)}
         data={DATA}
+        handleSearch={() => {
+          navigateToMedicine(searchValue); // Navigate to the medicine details page
+          setSearchValue('');
+          setSearchModalVisible(false);
+        }}
       />
 
       <PhotoModal

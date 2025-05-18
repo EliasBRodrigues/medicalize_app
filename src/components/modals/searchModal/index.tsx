@@ -25,6 +25,7 @@ type Item = {
 type Props = ModalProps &
   SearchBarProps & {
     data: Item[];
+    handleSearch: () => void;
   };
 
 export function SearchModal({
@@ -33,6 +34,7 @@ export function SearchModal({
   value,
   onChangeText,
   data,
+  handleSearch
 }: Props) {
   // State to manage camera button visibility based on scroll position
   const [showCameraButton, setShowCameraButton] = useState(true);
@@ -59,6 +61,7 @@ export function SearchModal({
           value={value}
           onChangeText={onChangeText}
           placeholder="Buscar medicamento"
+          onSubmitEditing={handleSearch}
         />
 
         <History

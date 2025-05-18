@@ -5,6 +5,6 @@ import { router } from "expo-router";
 export const navigateToMedicine = (medication: string) => {
   router.navigate({
     pathname: '/medicine/[name]',
-    params: { name: medication },
+    params: { name: medication.trim() }, // Trimmed medication name to remove any leading or trailing whitespace
   });
 };

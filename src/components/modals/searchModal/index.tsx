@@ -14,6 +14,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
+import { navigateToMedicine } from '@/utils/navigationUtils';
 
 // Tipo para cada item da constante DATA
 type Item = {
@@ -68,6 +69,10 @@ export function SearchModal({
           data={filteredData}
           onScroll={handleScroll}
           scrollEventThrottle={16}
+          onItemPress={(text: string) => {
+            navigateToMedicine(text); // Navigate to the medicine details page
+            }
+          }
         />
         {showCameraButton && (
           <Button style={s.button} onPress={onClose}>

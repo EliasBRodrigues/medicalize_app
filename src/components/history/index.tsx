@@ -20,9 +20,10 @@ type DataProps = {
   data: ItemProps[];
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   scrollEventThrottle?: number;
+  onItemPress?: (text: string) => void;
 };
 
-export function History({ data, onScroll, scrollEventThrottle }: DataProps) {
+export function History({ data, onScroll, scrollEventThrottle, onItemPress }: DataProps) {
   return (
     <View style={s.container}>
       <FlatList
@@ -38,7 +39,10 @@ export function History({ data, onScroll, scrollEventThrottle }: DataProps) {
                 : s.itemContainerNoBorder
             }
           >
-            <HistoryItem text={item.title} />
+            <HistoryItem 
+              text={item.title} 
+              onPress={() => onItemPress?.(item.title)} // Pass the title to onItemPress
+            />
           </View>
         )}
         contentContainerStyle={s.list}

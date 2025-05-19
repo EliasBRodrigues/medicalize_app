@@ -6,7 +6,7 @@ import { colors } from '@/styles/theme';
 import { ModalProps } from '@/types/modal.types';
 import { SearchBarProps } from '@/types/searchBar.types';
 import { IconCamera } from '@tabler/icons-react-native';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { s } from './styles';
 import {
   Modal,
@@ -15,6 +15,7 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 import { navigateToMedicine } from '@/utils/navigationUtils';
+import { saveSearchQuery, getSearchHistory } from '@/storage/searchHistoryStorage';
 
 // Tipo para cada item da constante DATA
 type Item = {
@@ -25,7 +26,6 @@ type Item = {
 // Tipo Props combinando ModalProps, SearchBarProps e a nova prop data
 type Props = ModalProps &
   SearchBarProps & {
-    data: Item[];
     handleSearch: () => void;
   };
 
@@ -34,14 +34,32 @@ export function SearchModal({
   onClose,
   value,
   onChangeText,
-  data,
   handleSearch
 }: Props) {
   // State to manage camera button visibility based on scroll position
   const [showCameraButton, setShowCameraButton] = useState(true);
+  const [searchHistory, setSearchHistory] = useState<Item[]>([]); // State to manage search history
+
+  // Function to load search history from AsyncStorage
+  const loadSearchHistory = useCallback(async () => {
+    const history = await getSearchHistory();
+    // Transform string array to Item array
+    const formattedHistory: Item[] = history.map((title: string, index: number) => ({
+      id: String(index + 1), // Generate a unique ID
+      title,
+    }));
+    setSearchHistory(formattedHistory);
+  }, []);
+
+  // Load search history when modal becomes visible
+  useEffect(() => {
+    if (visible) {
+      loadSearchHistory();
+    }
+  }, [visible, loadSearchHistory]);
 
   // Filtered data based on search input
-  const filteredData = data.filter((item) =>
+  const filteredData = searchHistory.filter((item) =>
     item?.title?.toLowerCase?.().includes(value?.toLowerCase?.() || '')
   );
 
@@ -50,6 +68,18 @@ export function SearchModal({
     const scrollY = event.nativeEvent.contentOffset.y;
     setShowCameraButton(scrollY === 0); // Show button only when at the top of the list
   }
+
+  const onSearch = () => {
+    if (value) {
+      saveSearchQuery(value); // Salva a consulta de pesquisa
+      handleSearch();
+    }
+  };
+
+  const onItemPress = (text: string) => {
+    saveSearchQuery(text); // Salva o item selecionado
+    navigateToMedicine(text);
+  };
 
   return (
     <Modal style={s.container} visible={visible} animationType="slide">
@@ -62,17 +92,14 @@ export function SearchModal({
           value={value}
           onChangeText={onChangeText}
           placeholder="Buscar medicamento"
-          onSubmitEditing={handleSearch}
+          onSubmitEditing={onSearch}
         />
 
         <History
           data={filteredData}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          onItemPress={(text: string) => {
-            navigateToMedicine(text); // Navigate to the medicine details page
-            }
-          }
+          onItemPress={onItemPress}
         />
         {showCameraButton && (
           <Button style={s.button} onPress={onClose}>

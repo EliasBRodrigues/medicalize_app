@@ -66,13 +66,13 @@ export default function Home() {
     }, [])
   );
 
-  const DATA = [
+  /* const DATA = [
     { id: '1', title: 'Dipirona' },
     { id: '2', title: 'Ibuprofeno' },
     { id: '3', title: 'Dicloridrato de Levocitirizina' },
     { id: '4', title: 'Dipiorna Monoidratada' },
     { id: '5', title: 'Cimegripe' },
-  ];
+  ]; */
 
   return (
     <>
@@ -182,7 +182,7 @@ export default function Home() {
         onClose={() => setSearchModalVisible(false)}
         value={searchValue}
         onChangeText={(searchValue) => setSearchValue(searchValue)}
-        data={DATA}
+        /* data={DATA} */
         handleSearch={() => {
           navigateToMedicine(searchValue); // Navigate to the medicine details page
           setSearchValue('');

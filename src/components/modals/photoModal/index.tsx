@@ -8,7 +8,6 @@ type Props = ModalProps & {
   photoUri: string; // URI of the photo to be displayed
 };
 
-
 export function PhotoModal({ visible, onClose, photoUri }: Props) {
   return (
     <Modal style={s.modal} animationType="fade" visible={visible} transparent>

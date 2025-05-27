@@ -1,7 +1,14 @@
-import { Text, View, StyleSheet, ImageBackground, ActivityIndicator, StatusBar } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  ActivityIndicator,
+  StatusBar,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
-import Bula from '@/components/medicine/bula';
+import Bula from '@/components/medicine/Leaflet';
 import { TopBar } from '@/components/topBar';
 import { fontFamily, colors } from '@/styles/theme';
 import { useNavigation } from '@react-navigation/native';
@@ -18,7 +25,7 @@ export const images = {
 type Medicine = {
   nome: string;
   principio_ativo: string;
-  bula: { [key: string]: { Descrição: string } };// Medicine information (bula) with descriptions
+  bula: { [key: string]: { Descrição: string } }; // Medicine information (bula) with descriptions
 };
 
 // Type definition for the API response
@@ -38,7 +45,8 @@ const bulaTitleTemplates: { [key: string]: string } = {
   males: 'Quais os males que {nome} pode me causar?',
   armazenamento: 'Onde, como e por quanto tempo posso guardar {nome}?',
   esquecerDeUsar: 'O que devo fazer quando eu me esquecer de usar {nome}?',
-  superdose: 'Superdose - o que fazer se alguém usar uma quantidade maior do que a indicada do {nome}?',
+  superdose:
+    'Superdose - o que fazer se alguém usar uma quantidade maior do que a indicada do {nome}?',
   apresentacao: 'Apresentações',
   composicao: 'Composição',
 };
@@ -47,7 +55,8 @@ const bulaTitleTemplates: { [key: string]: string } = {
 const mapBulaData = (bula: { [key: string]: string }, nome: string) => {
   const mappedBula: { [key: string]: { Descrição: string } } = {};
   Object.keys(bula).forEach((key) => {
-    if (key !== 'id') { // Exclude 'id' field from bula data
+    if (key !== 'id') {
+      // Exclude 'id' field from bula data
       const titleTemplate = bulaTitleTemplates[key] || key; // Use template or key as fallback
       const newKey = titleTemplate.replace('{nome}', nome); // Replace placeholder with medicine name
       mappedBula[newKey] = { Descrição: bula[key] }; // Assign description to new key
@@ -70,8 +79,11 @@ export default function Medicine() {
     try {
       setIsLoading(true); // Set loading state to true
       // Fetch medicine data using the provided name
-      const { data } = await getMedicines.get<MedicineApiResponse[]>(`/api/medicamentos/buscar/${name}`);
-      if (data && Array.isArray(data) && data.length > 0) { // Check if data is valid
+      const { data } = await getMedicines.get<MedicineApiResponse[]>(
+        `/api/medicamentos/buscar/${name}`
+      );
+      if (data && Array.isArray(data) && data.length > 0) {
+        // Check if data is valid
         const medicineData = data[0]; // Get the first result
 
         // Map API response to the Medicine type
@@ -90,7 +102,9 @@ export default function Medicine() {
       console.error('Error fetching medicine:', error); // Log error
       setMedicine(null); // Clear medicine state
       setErrorModalVisible(true); // Show error modal
-      setErrorMessage('Erro ao carregar os dados. Verifique sua conexão e tente novamente.'); // Set error message
+      setErrorMessage(
+        'Erro ao carregar os dados. Verifique sua conexão e tente novamente.'
+      ); // Set error message
     } finally {
       setIsLoading(false); // Set loading state to false
     }
@@ -98,7 +112,8 @@ export default function Medicine() {
 
   // Effect to fetch medicine data when component mounts or params.name changes
   useEffect(() => {
-    if (params.name) { // Check if name parameter exists
+    if (params.name) {
+      // Check if name parameter exists
       const encodedName = encodeURIComponent(params.name); // Encode name for URL safety
       fetchMedicine(encodedName); // Fetch medicine data
     } else {
@@ -109,56 +124,64 @@ export default function Medicine() {
   }, [params.name, fetchMedicine]); // Dependencies for the effect
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right', 'bottom']}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.gray[600]} hidden={isStatusBarVisible}/>
+    <SafeAreaView
+      style={{ flex: 1 }}
+      edges={['top', 'left', 'right', 'bottom']}
+    >
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.gray[600]}
+        hidden={isStatusBarVisible}
+      />
       {isLoading ? ( // Show loading indicator while fetching data
         <View style={s.loadingContainer}>
           <ActivityIndicator size="large" color={colors.green.base} />
         </View>
-        ) : medicine ? ( // Render medicine details if data is available
-          <>
-            {/* Top bar with back navigation */}
-            <TopBar>
-              <TopBar.ChevronIcon
-                onPress={() => navigation.goBack()} // Navigate back on press
-              />
-            </TopBar>
-            <View style={s.container}>
-              <ImageBackground
-                source={images.searchPanelBg}
-                resizeMode="cover"
-                imageStyle={{ borderRadius: 10 }}
-                style={s.imageBg}
-              >
-                <View style={s.header}>
-                  {/* Medicine name */}
-                  <Text
-                    style={s.title}
-                    accessible
-                    accessibilityLabel={`Nome do medicamento: ${medicine.nome}`}
-                  >
-                    {medicine.nome.toUpperCase()} {/* Display medicine name in uppercase */}
-                  </Text>
-                  {/* Active ingredient */}
-                  <Text style={s.subtitle}>{medicine.principio_ativo}</Text>
-                </View>
-              </ImageBackground>
-              {/* Bula component to display medicine information */}
-              <Bula bula={medicine.bula} />
-            </View>
-          </>
-        ) : (
-          // Show error modal if no medicine data
-          <ErrorModal
-            visible={errorModalVisible}
-            onClose={() => {
-              router.back(); // Já está correto, mas verifique o contexto
-              setErrorModalVisible(false);
-            }}
-            title="Medicamento não encontrado"
-            message="Ainda não consta em nossa base de dados" 
-          />
-        )}
+      ) : medicine ? ( // Render medicine details if data is available
+        <>
+          {/* Top bar with back navigation */}
+          <TopBar>
+            <TopBar.ChevronIcon
+              onPress={() => navigation.goBack()} // Navigate back on press
+            />
+          </TopBar>
+          <View style={s.container}>
+            <ImageBackground
+              source={images.searchPanelBg}
+              resizeMode="cover"
+              imageStyle={{ borderRadius: 10 }}
+              style={s.imageBg}
+            >
+              <View style={s.header}>
+                {/* Medicine name */}
+                <Text
+                  style={s.title}
+                  accessible
+                  accessibilityLabel={`Nome do medicamento: ${medicine.nome}`}
+                >
+                  {medicine.nome.toUpperCase()}{' '}
+                  {/* Display medicine name in uppercase */}
+                </Text>
+                {/* Active ingredient */}
+                <Text style={s.subtitle}>{medicine.principio_ativo}</Text>
+              </View>
+            </ImageBackground>
+            {/* Bula component to display medicine information */}
+            <Bula bula={medicine.bula} />
+          </View>
+        </>
+      ) : (
+        // Show error modal if no medicine data
+        <ErrorModal
+          visible={errorModalVisible}
+          onClose={() => {
+            router.back(); // Já está correto, mas verifique o contexto
+            setErrorModalVisible(false);
+          }}
+          title="Medicamento não encontrado"
+          message="Ainda não consta em nossa base de dados"
+        />
+      )}
     </SafeAreaView>
   );
 }

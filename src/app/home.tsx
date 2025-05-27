@@ -134,9 +134,14 @@ export default function Home() {
         {/* Bottom bar with camera controls */}
         <View style={s.bottomBar}>
           {/* Photo library button */}
-          <CameraButton 
-            onPress={() => 
-              processImage('pick', setPhotoUri, setPhotoModalVisible, setErrorModalVisible)
+          <CameraButton
+            onPress={() =>
+              processImage(
+                'pick',
+                setPhotoUri,
+                setPhotoModalVisible,
+                setErrorModalVisible
+              )
             }
           >
             <CameraButton.Icon
@@ -147,9 +152,16 @@ export default function Home() {
           </CameraButton>
 
           {/* Photo capture button */}
-          <TouchableOpacity style={s.photoCaptureButton} 
+          <TouchableOpacity
+            style={s.photoCaptureButton}
             onPress={() =>
-              processImage('take', setPhotoUri, setPhotoModalVisible, setErrorModalVisible, cameraRef)
+              processImage(
+                'take',
+                setPhotoUri,
+                setPhotoModalVisible,
+                setErrorModalVisible,
+                cameraRef
+              )
             }
           >
             <View
@@ -201,7 +213,7 @@ export default function Home() {
         onClose={() => setErrorModalVisible(false)}
         title="Erro ao processar imagem"
         message="Ocorreu um erro ao processar a imagem. Tente novamente."
-        />
+      />
     </>
   );
 }

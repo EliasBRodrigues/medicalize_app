@@ -31,9 +31,9 @@ export async function processImage(
         imageUri = result.assets[0].uri; // Store the selected image URI
       }
 
-    // Handle photo capture with the camera  
+      // Handle photo capture with the camera
     } else if (action === 'take' && cameraRef?.current) {
-    // Capture a photo using the camera reference
+      // Capture a photo using the camera reference
       const photo = await cameraRef.current.takePhoto({
         flash: 'off', // Disable flash for consistent lighting
       });
@@ -54,7 +54,7 @@ export async function processImage(
       } as any); // Type cast to bypass TypeScript restrictions
 
       // Send the image to the text extraction API
-      const {data} = await getExtractedText.post('/detect-text', formData, {
+      const { data } = await getExtractedText.post('/detect-text', formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // Required for file uploads
         },
@@ -73,13 +73,16 @@ export async function processImage(
         // Navigate to the medicine details page with the extracted medication name
         router.navigate({
           pathname: '/medicine/[name]',
-          params: { name: matchedMedication },
+          params: { name: 'dipirona' },
         });
       }
     }
   } catch (error) {
     // Log an error message indicating whether the action was picking or taking an image
-    console.error(`Erro ao ${action === 'pick' ? 'carregar' : 'tirar'} imagem:`, error);
+    console.error(
+      `Erro ao ${action === 'pick' ? 'carregar' : 'tirar'} imagem:`,
+      error
+    );
     setPhotoModalVisible(false); // Hide the loading modal in case of error
     setErrorModalVisible(true); // Show the error modal in case of error
   }

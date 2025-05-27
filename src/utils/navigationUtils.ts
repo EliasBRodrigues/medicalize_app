@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router } from 'expo-router';
 
 // function to navigate to the medicine details page
 // This function takes a medication name as an argument and navigates to the corresponding page

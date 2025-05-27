@@ -15,7 +15,10 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 import { navigateToMedicine } from '@/utils/navigationUtils';
-import { saveSearchQuery, getSearchHistory } from '@/storage/searchHistoryStorage';
+import {
+  saveSearchQuery,
+  getSearchHistory,
+} from '@/storage/searchHistoryStorage';
 
 // Tipo para cada item da constante DATA
 type Item = {
@@ -34,7 +37,7 @@ export function SearchModal({
   onClose,
   value,
   onChangeText,
-  handleSearch
+  handleSearch,
 }: Props) {
   // State to manage camera button visibility based on scroll position
   const [showCameraButton, setShowCameraButton] = useState(true);
@@ -44,10 +47,12 @@ export function SearchModal({
   const loadSearchHistory = useCallback(async () => {
     const history = await getSearchHistory();
     // Transform string array to Item array
-    const formattedHistory: Item[] = history.map((title: string, index: number) => ({
-      id: String(index + 1), // Generate a unique ID
-      title,
-    }));
+    const formattedHistory: Item[] = history.map(
+      (title: string, index: number) => ({
+        id: String(index + 1), // Generate a unique ID
+        title,
+      })
+    );
     setSearchHistory(formattedHistory);
   }, []);
 

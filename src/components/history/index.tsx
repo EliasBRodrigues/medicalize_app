@@ -23,7 +23,12 @@ type DataProps = {
   onItemPress?: (text: string) => void;
 };
 
-export function History({ data, onScroll, scrollEventThrottle, onItemPress }: DataProps) {
+export function History({
+  data,
+  onScroll,
+  scrollEventThrottle,
+  onItemPress,
+}: DataProps) {
   return (
     <View style={s.container}>
       <FlatList
@@ -39,8 +44,8 @@ export function History({ data, onScroll, scrollEventThrottle, onItemPress }: Da
                 : s.itemContainerNoBorder
             }
           >
-            <HistoryItem 
-              text={item.title} 
+            <HistoryItem
+              text={item.title}
               onPress={() => onItemPress?.(item.title)} // Pass the title to onItemPress
             />
           </View>

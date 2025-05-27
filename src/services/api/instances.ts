@@ -15,4 +15,3 @@ export const getMedicines = createApiInstance({
   baseURL: API_URLS.MEDICINES, // Set the base URL to the text extraction API
   timeout: 900000, // Set the request timeout to 20 seconds
 });
-

@@ -6,13 +6,18 @@ export const s = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    justifyContent: 'space-between',
+  },
+  containerImgs: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 48,
   },
   image: {
-    width: 200,
-    height: 300,
-    marginHorizontal: 'auto',
-    marginTop: 48,
-    marginBottom: 'auto',
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
   },
   list: {
     marginTop: 24,

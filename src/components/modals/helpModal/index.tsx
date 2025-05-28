@@ -18,11 +18,12 @@ export function HelpModal({ visible, onClose }: ModalProps) {
           <Text style={s.text}>Tire a foto a uma distância adequada.</Text>
           <Text style={s.text}>Use fundo neutro e boa iluminação.</Text>
         </View>
-        <Image
-          source={require('@/assets/landscape-placeholder.png')}
-          style={s.image}
-        />
-        <Button onPress={onClose}>
+        <View style={s.containerImgs}>
+          <Image source={require('@/assets/offCenter-photo.png')} style={s.image} />
+          <Image source={require('@/assets/photo-dark.png')} style={s.image} />
+          <Image source={require('@/assets/photo-ok.png')} style={s.image} />
+        </View>
+        <Button onPress={onClose} style={{ marginTop: 'auto' }}>
           <Button.Title>Continuar</Button.Title>
         </Button>
       </View>

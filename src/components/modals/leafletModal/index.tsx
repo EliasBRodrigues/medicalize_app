@@ -68,12 +68,12 @@ export function LeafletModal({
           <View style={s.buttonContainer}>
             {/* Button to clear all filters */}
             <TouchableOpacity style={s.clearButton} onPress={clearFilters}>
-              <Text style={s.clearButtonText}>Limpar</Text>{' '}
+              <Text style={s.clearButtonText}>Limpar</Text>
               {/* Clear button text */}
             </TouchableOpacity>
             {/* Button to apply selected filters */}
             <TouchableOpacity style={s.applyButton} onPress={applyFilters}>
-              <Text style={s.applyButtonText}>Aplicar</Text>{' '}
+              <Text style={s.applyButtonText}>Aplicar</Text>
               {/* Apply button text */}
             </TouchableOpacity>
           </View>

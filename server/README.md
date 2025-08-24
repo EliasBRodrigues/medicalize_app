@@ -29,13 +29,13 @@
 
 ## Instalação
 # 1. Clonar o repositório
-git clone https://github.com/seu-usuario/medicamentos-api.git
-cd medicamentos-api
+* git clone https://github.com/seu-usuario/medicamentos-api.git
+* cd medicamentos-api
 
 # 2. Criar e ativar um ambiente virtual
-python -m venv venv
-source venv/bin/activate  # Linux / MacOS
-venv\Scripts\activate     # Windows
+* python -m venv venv
+* source venv/bin/activate  # Linux / MacOS
+* venv\Scripts\activate     # Windows
 
 # 3. Instalar dependências
 * pip install -r requirements.txt
@@ -43,8 +43,9 @@ venv\Scripts\activate     # Windows
 # 4. Configurar credenciais do Google Cloud Vision
 * export GOOGLE_APPLICATION_CREDENTIALS="seu_arquivo_credenciais.json"
 
-🗂️ Estrutura do Projeto
-📦 medicamentos-api
+## 📁 Estrutura do Projeto
+## 📦 medicamentos-api
+
 ├── app/
 │   ├── __init__.py
 │   ├── routes.py            # Rotas da API Flask
@@ -56,8 +57,8 @@ venv\Scripts\activate     # Windows
 ├── run.py                   # Inicializador da API
 └── README.md
 
-🌐 Endpoints
-1️⃣ POST /detect-text
+## 🌐 Endpoints
+* 1️⃣ POST /detect-text
 
 ## Detecta medicamentos a partir de uma imagem enviada via multipart/form-data.
 
